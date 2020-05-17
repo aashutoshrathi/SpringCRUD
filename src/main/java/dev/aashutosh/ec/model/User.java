@@ -1,6 +1,9 @@
 package dev.aashutosh.ec.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "users")
@@ -10,9 +13,11 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Email
     @Column(name = "email", nullable = false)
     private String email;
 
+    @Pattern(regexp="[6-9][0-9]{9}")
     @Column(name = "mobile", nullable = false)
     private String mobile;
 
