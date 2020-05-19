@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static dev.aashutosh.ec.helper.ErrorMessages.notFound;
@@ -22,9 +23,14 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<User> create(@RequestBody User user) {
-        User createUser = service.createUser(user);
-        return new ResponseEntity<>(createUser, new HttpHeaders(), HttpStatus.CREATED);
+    public ResponseEntity<User> create(@Valid @RequestBody User user) {
+        User createUser = null;
+        try {
+            createUser = service.createUser(user);
+            return new ResponseEntity<>(createUser, new HttpHeaders(), HttpStatus.CREATED);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, notFound(user.getId()), e);
+        }
     }
 
     @GetMapping
@@ -43,7 +49,7 @@ public class UserController {
 
     @PutMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<User> update(@RequestBody User user) {
+    public ResponseEntity<User> update(@Valid @RequestBody User user) {
         try {
             User updatedUser = service.updateUser(user);
             return new ResponseEntity<>(updatedUser, new HttpHeaders(), HttpStatus.ACCEPTED);

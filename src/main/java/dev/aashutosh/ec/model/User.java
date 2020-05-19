@@ -13,11 +13,11 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Email
+    @Email(message = "Invalid email address provided")
     @Column(name = "email", nullable = false)
     private String email;
 
-    @Pattern(regexp="[6-9][0-9]{9}")
+    @Pattern(regexp="\\+91[6-9][0-9]{9}")
     @Column(name = "mobile", nullable = false)
     private String mobile;
 

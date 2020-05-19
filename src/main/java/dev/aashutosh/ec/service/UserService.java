@@ -3,11 +3,18 @@ package dev.aashutosh.ec.service;
 import dev.aashutosh.ec.model.User;
 import dev.aashutosh.ec.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-import javax.validation.constraints.Null;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -27,7 +34,15 @@ public class UserService {
         return repository.getOne(id);
     }
 
-    public User createUser(User entity) {
+    public User createUser(User entity) throws Exception {
+        Optional<User> sameEmailUser = repository.findByEmail(entity.getEmail());
+        if(sameEmailUser.isPresent())
+            throw new Exception("Email already used by another user");
+
+        Optional<User> sameMobileUser = repository.findByMobile(entity.getMobile());
+        if(sameMobileUser.isPresent())
+            throw new Exception("Mobile number already used by another user");
+
         entity = repository.save(entity);
         return entity;
     }
@@ -36,7 +51,14 @@ public class UserService {
         Optional<User> user = repository.findById(entity.getId());
         if(user.isPresent()) {
             User existingUser = user.get();
+            Optional<User> sameEmailUser = repository.findByEmail(entity.getEmail());
+            if(sameEmailUser.isPresent())
+                throw new Exception("Email already used by another user");
             existingUser.setEmail(entity.getEmail());
+
+            Optional<User> sameMobileUser = repository.findByMobile(entity.getMobile());
+            if(sameMobileUser.isPresent())
+                throw new Exception("Mobile number already used by another user");
             existingUser.setMobile(entity.getMobile());
             existingUser.setAddress(entity.getAddress());
             existingUser = repository.save(existingUser);
@@ -44,6 +66,19 @@ public class UserService {
         } else {
             throw new Exception("No user with such user id found");
         }
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleValidationExceptions(
+            MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return errors;
     }
 }
 
