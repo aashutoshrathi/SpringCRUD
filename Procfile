@@ -1,0 +1,1 @@
+web:  java -jar target/basicuser-0.0.1-SNAPSHOT.jar
