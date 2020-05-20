@@ -52,12 +52,12 @@ public class UserService {
         if(user.isPresent()) {
             User existingUser = user.get();
             Optional<User> sameEmailUser = repository.findByEmail(entity.getEmail());
-            if(sameEmailUser.isPresent())
+            if(sameEmailUser.isPresent() && !sameEmailUser.get().getId().equals(entity.getId()))
                 throw new Exception("Email already used by another user");
             existingUser.setEmail(entity.getEmail());
 
             Optional<User> sameMobileUser = repository.findByMobile(entity.getMobile());
-            if(sameMobileUser.isPresent())
+            if(sameMobileUser.isPresent() && !sameMobileUser.get().getId().equals(entity.getId()))
                 throw new Exception("Mobile number already used by another user");
             existingUser.setMobile(entity.getMobile());
             existingUser.setAddress(entity.getAddress());

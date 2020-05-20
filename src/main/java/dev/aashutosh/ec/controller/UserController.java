@@ -29,7 +29,7 @@ public class UserController {
             createUser = service.createUser(user);
             return new ResponseEntity<>(createUser, new HttpHeaders(), HttpStatus.CREATED);
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, notFound(user.getId()), e);
+            throw new ResponseStatusException(HttpStatus.CONFLICT, notFound(user.getId()), e.getCause());
         }
     }
 
@@ -54,7 +54,7 @@ public class UserController {
             User updatedUser = service.updateUser(user);
             return new ResponseEntity<>(updatedUser, new HttpHeaders(), HttpStatus.ACCEPTED);
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, notFound(user.getId()), e);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, notFound(user.getId()), e.getCause());
         }
     }
 }
