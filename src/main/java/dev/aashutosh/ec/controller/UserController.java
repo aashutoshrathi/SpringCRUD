@@ -1,5 +1,6 @@
 package dev.aashutosh.ec.controller;
 
+import dev.aashutosh.ec.dto.getUserDto;
 import dev.aashutosh.ec.model.User;
 import dev.aashutosh.ec.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.util.List;
-
-import static dev.aashutosh.ec.helper.ErrorMessages.notFound;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
@@ -21,18 +21,6 @@ public class UserController {
     @Autowired
     UserService service;
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<User> create(@Valid @RequestBody User user) {
-        User createUser = null;
-        try {
-            createUser = service.createUser(user);
-            return new ResponseEntity<>(createUser, new HttpHeaders(), HttpStatus.CREATED);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, notFound(user.getId()), e.getCause());
-        }
-    }
-
     @GetMapping
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<List<User>> findAll() {
@@ -40,21 +28,37 @@ public class UserController {
         return new ResponseEntity<>(users, new HttpHeaders(), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public ResponseEntity<User> findAll(@PathVariable("id") Long id) {
-        User user = service.getUserById(id);
-        return new ResponseEntity<>(user, new HttpHeaders(), HttpStatus.OK);
+    @PostMapping("/create")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<User> create(@Valid @RequestBody User user) {
+        User createUser = null;
+        try {
+            createUser = service.createUser(user);
+            return new ResponseEntity<>(createUser, new HttpHeaders(), HttpStatus.CREATED);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Unable to create user", e.getCause());
+        }
     }
 
-    @PutMapping
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<User> update(@Valid @RequestBody User user) {
+    @PostMapping("/get")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public ResponseEntity<Optional<User>> findAll(@Valid @RequestBody getUserDto dto) {
         try {
-            User updatedUser = service.updateUser(user);
-            return new ResponseEntity<>(updatedUser, new HttpHeaders(), HttpStatus.ACCEPTED);
+            Optional<User> user = service.getUserByEmailOrMobile(dto);
+            return new ResponseEntity<>(user, new HttpHeaders(), HttpStatus.ACCEPTED);
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, notFound(user.getId()), e.getCause());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No user found", e.getCause());
+        }
+    }
+
+    @PutMapping("/update")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public ResponseEntity<User> update(@Valid @RequestBody User dto) {
+        try {
+            User user = service.updateUser(dto);
+            return new ResponseEntity<>(user, new HttpHeaders(), HttpStatus.ACCEPTED);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No such user found", e.getCause());
         }
     }
 }

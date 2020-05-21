@@ -3,7 +3,6 @@ package dev.aashutosh.ec.model;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "users")
@@ -21,6 +20,7 @@ public class User {
     @Column(name = "mobile", nullable = false)
     private String mobile;
 
+    @Pattern(regexp="[a-zA-Z\\ ]+(,)*\\1")
     @Column(name = "address")
     private String address;
 

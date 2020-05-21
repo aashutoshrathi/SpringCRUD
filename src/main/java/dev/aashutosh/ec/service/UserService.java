@@ -1,21 +1,17 @@
 package dev.aashutosh.ec.service;
 
+import dev.aashutosh.ec.dto.getUserDto;
 import dev.aashutosh.ec.model.User;
 import dev.aashutosh.ec.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -30,8 +26,27 @@ public class UserService {
         return repository.findAll();
     }
 
-    public User getUserById(Long id) {
-        return repository.getOne(id);
+    public Optional<User> getUserByEmailOrMobile(getUserDto dto) throws Exception {
+        Optional<User> userObj = null;
+        if(dto.email != null) {
+            userObj = getUserByEmail(dto.email);
+        }
+        else if(dto.mobile != null) {
+            userObj = getUserByMobile(dto.mobile);
+        }
+
+        if(Objects.requireNonNull(userObj).isEmpty()) {
+            throw new Exception("Unable to update");
+        }
+        return userObj;
+    }
+
+    public Optional<User> getUserByMobile(String mobile) {
+        return repository.findByMobile(mobile);
+    }
+
+    public Optional<User> getUserByEmail(String email) {
+        return repository.findByEmail(email);
     }
 
     public User createUser(User entity) throws Exception {
