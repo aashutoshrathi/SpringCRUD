@@ -16,11 +16,11 @@ public class User {
     private long id;
 
     @Email(message = ErrorStrings.INVALID_EMAIL)
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     @Pattern(regexp = Patterns.VALID_MOBILE, message = ErrorStrings.INVALID_MOBILE)
-    @Column(name = "mobile", nullable = false)
+    @Column(name = "mobile", nullable = false, unique = true)
     private String mobile;
 
     @Pattern(regexp = Patterns.VALID_ADDRESS, message = ErrorStrings.INVALID_ADDRESS)
