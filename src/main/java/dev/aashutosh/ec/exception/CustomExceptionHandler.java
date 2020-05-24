@@ -1,8 +1,5 @@
 package dev.aashutosh.ec.exception;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import dev.aashutosh.ec.utils.ApiError;
 import dev.aashutosh.ec.utils.ErrorObject;
 import dev.aashutosh.ec.utils.ErrorStrings;
@@ -15,6 +12,9 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @ControllerAdvice
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {

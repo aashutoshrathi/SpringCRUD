@@ -19,11 +19,11 @@ public class User {
     @Column(name = "email", nullable = false)
     private String email;
 
-    @Pattern(regexp= Patterns.VALID_MOBILE, message = ErrorStrings.INVALID_MOBILE)
+    @Pattern(regexp = Patterns.VALID_MOBILE, message = ErrorStrings.INVALID_MOBILE)
     @Column(name = "mobile", nullable = false)
     private String mobile;
 
-    @Pattern(regexp = Patterns.VALID_ADDRESS,  message = ErrorStrings.INVALID_ADDRESS)
+    @Pattern(regexp = Patterns.VALID_ADDRESS, message = ErrorStrings.INVALID_ADDRESS)
     @Column(name = "address")
     private String address;
 

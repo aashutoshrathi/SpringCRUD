@@ -5,7 +5,6 @@ import dev.aashutosh.ec.dto.UpdateUserDto;
 import dev.aashutosh.ec.model.User;
 import dev.aashutosh.ec.service.UserService;
 import dev.aashutosh.ec.utils.ErrorStrings;
-import org.hibernate.sql.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
