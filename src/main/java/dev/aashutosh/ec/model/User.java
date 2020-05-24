@@ -1,5 +1,8 @@
 package dev.aashutosh.ec.model;
 
+import dev.aashutosh.ec.utils.ErrorStrings;
+import dev.aashutosh.ec.utils.Patterns;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
@@ -9,18 +12,18 @@ import javax.validation.constraints.Pattern;
 public class User {
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
 
-    @Email(message = "Invalid email address provided")
+    @Email(message = ErrorStrings.INVALID_EMAIL)
     @Column(name = "email", nullable = false)
     private String email;
 
-    @Pattern(regexp="\\+91[6-9][0-9]{9}")
+    @Pattern(regexp= Patterns.VALID_MOBILE, message = ErrorStrings.INVALID_MOBILE)
     @Column(name = "mobile", nullable = false)
     private String mobile;
 
-    @Pattern(regexp="[a-zA-Z\\ ]+(,)*\\1")
+    @Pattern(regexp = Patterns.VALID_ADDRESS,  message = ErrorStrings.INVALID_ADDRESS)
     @Column(name = "address")
     private String address;
 
@@ -51,7 +54,7 @@ public class User {
         this.address = address;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 }
