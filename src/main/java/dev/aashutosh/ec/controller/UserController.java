@@ -10,7 +10,9 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -31,8 +33,12 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public User create(@RequestBody @Valid User user) throws Exception {
-        return service.createUser(user);
+    public Map<String, Object> create(@RequestBody @Valid User user) throws Exception {
+        User createdUser = service.createUser(user);
+        Map<String, Object> res = new HashMap<>();
+        res.put("new_user", createdUser);
+        res.put("message", "Success");
+        return res;
     }
 
     @PostMapping("/get")
@@ -41,7 +47,11 @@ public class UserController {
     }
 
     @PutMapping("/update")
-    public User update(@Valid @RequestBody UpdateUserDto dto) throws Exception {
-        return service.updateUser(dto);
+    public Map<String, Object> update(@Valid @RequestBody UpdateUserDto dto) throws Exception {
+        User updatedUser = service.updateUser(dto);
+        Map<String, Object> res = new HashMap<>();
+        res.put("updated_user", updatedUser);
+        res.put("message", "Success");
+        return res;
     }
 }
