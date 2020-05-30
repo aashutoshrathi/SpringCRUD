@@ -12,10 +12,10 @@ variables:
   azureSubscription: '4b34d768-618a-4d07-870a-cf656f0b1d82'
   
   # Web app name
-  webAppName: ''
+  webAppName: 'SpringCRUD'
 
   # Environment name
-  environmentName: ''
+  environmentName: 'dev'
   
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
